@@ -1,7 +1,6 @@
 import { OkPacket } from "mysql2";
-import connection from "../db";
-
-import Tutorial from "../models/tutorial.model";
+import conn from "../db";
+import Tutorial from "../models/Tutorial";
 
 interface ITutorialRepository {
   save(tutorial: Tutorial): Promise<Tutorial>;
@@ -15,7 +14,7 @@ interface ITutorialRepository {
 class TutorialRepository implements ITutorialRepository {
   save(tutorial: Tutorial): Promise<Tutorial> {
     return new Promise((resolve, reject) => {
-      connection.query<OkPacket>(
+      conn.query<OkPacket>(
         "INSERT INTO tutorials (title, description, published) VALUES(?,?,?)",
         [tutorial.title, tutorial.description, tutorial.published ? tutorial.published : false],
         (err, res) => {
@@ -43,7 +42,7 @@ class TutorialRepository implements ITutorialRepository {
       query += " WHERE " + condition;
 
     return new Promise((resolve, reject) => {
-      connection.query<Tutorial[]>(query, (err, res) => {
+      conn.query<Tutorial[]>(query, (err, res) => {
         if (err) reject(err);
         else resolve(res);
       });
@@ -52,7 +51,7 @@ class TutorialRepository implements ITutorialRepository {
 
   retrieveById(tutorialId: number): Promise<Tutorial> {
     return new Promise((resolve, reject) => {
-      connection.query<Tutorial[]>(
+      conn.query<Tutorial[]>(
         "SELECT * FROM tutorials WHERE id = ?",
         [tutorialId],
         (err, res) => {
@@ -65,7 +64,7 @@ class TutorialRepository implements ITutorialRepository {
 
   update(tutorial: Tutorial): Promise<number> {
     return new Promise((resolve, reject) => {
-      connection.query<OkPacket>(
+      conn.query<OkPacket>(
         "UPDATE tutorials SET title = ?, description = ?, published = ? WHERE id = ?",
         [tutorial.title, tutorial.description, tutorial.published, tutorial.id],
         (err, res) => {
@@ -78,7 +77,7 @@ class TutorialRepository implements ITutorialRepository {
 
   delete(tutorialId: number): Promise<number> {
     return new Promise((resolve, reject) => {
-      connection.query<OkPacket>(
+      conn.query<OkPacket>(
         "DELETE FROM tutorials WHERE id = ?",
         [tutorialId],
         (err, res) => {
@@ -91,7 +90,7 @@ class TutorialRepository implements ITutorialRepository {
 
   deleteAll(): Promise<number> {
     return new Promise((resolve, reject) => {
-      connection.query<OkPacket>("DELETE FROM tutorials", (err, res) => {
+      conn.query<OkPacket>("DELETE FROM tutorials", (err, res) => {
         if (err) reject(err);
         else resolve(res.affectedRows);
       });

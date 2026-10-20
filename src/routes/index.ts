@@ -1,6 +1,6 @@
 import { Application } from "express";
-import tutorialRoutes from "./tutorial.routes";
-import homeRoutes from "./home.routes";
+import tutorialRoutes from "./tutorialRoutes";
+import homeRoutes from "./homeRoutes";
 
 export default class Routes {
   constructor(app: Application) {
