@@ -1,5 +1,5 @@
 import { Router } from "express";
-import TutorialController from "../controllers/tutorial.controller";
+import TutorialController from "../controllers/tutorialController";
 
 class TutorialRoutes {
   router = Router();
