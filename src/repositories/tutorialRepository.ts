@@ -30,20 +30,23 @@ class TutorialRepository implements ITutorialRepository {
     }
 
     retrieveAll(searchParams: { title?: string, published?: boolean }): Promise<Tutorial[]> {
-        let query: string = "SELECT * FROM tutorials WHERE";
-        let condition: string = "";
+        let query: string = "SELECT * FROM tutorials";
+        let conditions: string[] = [];
+        let values: (string | boolean)[] = [];
 
         if (searchParams?.published)
-            condition += "published = TRUE"
+            conditions.push("published = TRUE");
 
-        if (searchParams?.title)
-            condition += `LOWER(title) LIKE '%${searchParams.title}%'`
+        if (searchParams?.title) {
+            conditions.push("LOWER(title) LIKE ?");
+            values.push(`%${searchParams.title.toLowerCase()}%`);
+        }
 
-        if (condition.length)
-            query += condition;
+        if (conditions.length)
+            query += " WHERE " + conditions.join(" AND ");
 
         return new Promise((resolve, reject) => {
-            conn.query<Tutorial[]>(query, (err, res) => {
+            conn.query<Tutorial[]>(query, values, (err, res) => {
                 if (err) 
                     reject(err);
                 else 
