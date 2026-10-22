@@ -1,4 +1,4 @@
-import { OkPacket } from "mysql2";
+import { ResultSetHeader  } from "mysql2";
 import conn from "../db";
 import Tutorial from "../models/Tutorial";
 
@@ -14,7 +14,7 @@ interface ITutorialRepository {
 class TutorialRepository implements ITutorialRepository {
     save(tutorial: Tutorial): Promise<Tutorial> {
         return new Promise((resolve, reject) => {
-            conn.query<OkPacket>(
+            conn.query<ResultSetHeader >(
                 "INSERT INTO tutorials (title, description, published) VALUES(?,?,?)",
                 [tutorial.title, tutorial.description, tutorial.published ? tutorial.published : false],
                 (err, res) => {
@@ -72,7 +72,7 @@ class TutorialRepository implements ITutorialRepository {
 
     update(tutorial: Tutorial): Promise<number> {
         return new Promise((resolve, reject) => {
-            conn.query<OkPacket>(
+            conn.query<ResultSetHeader >(
                 "UPDATE tutorials SET title = ?, description = ?, published = ? WHERE id = ?",
                 [tutorial.title, tutorial.description, tutorial.published, tutorial.id],
                 (err, res) => {
@@ -87,7 +87,7 @@ class TutorialRepository implements ITutorialRepository {
 
     delete(tutorialId: number): Promise<number> {
         return new Promise((resolve, reject) => {
-            conn.query<OkPacket>(
+            conn.query<ResultSetHeader >(
                 "DELETE FROM tutorials WHERE id = ?",
                 [tutorialId],
                 (err, res) => {
@@ -102,7 +102,7 @@ class TutorialRepository implements ITutorialRepository {
 
     deleteAll(): Promise<number> {
         return new Promise((resolve, reject) => {
-            conn.query<OkPacket>("DELETE FROM tutorials", (err, res) => {
+            conn.query<ResultSetHeader >("DELETE FROM tutorials", (err, res) => {
                 if (err) 
                     reject(err);
                 else 
